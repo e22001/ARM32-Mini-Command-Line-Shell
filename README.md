@@ -1,47 +1,107 @@
-ARM32 Mini Command-Line Shell
-A minimal interactive command-line shell implemented entirely in ARM32 Assembly for the CO1020 – Computer Systems Programming course at the Department of Computer Engineering, University of Peradeniya.
-Overview
-This project demonstrates low-level programming concepts by building a functional command-line interface without relying on high-level languages or standard libraries. The shell continuously accepts user input, parses commands, executes the corresponding routines, and returns to the prompt until the user exits.
-The implementation focuses on ARM32 system calls, manual memory management, string processing, command parsing, stack discipline, register preservation, and error handling.
-Features
-- Continuous interactive shell> prompt
+# ARM32 Mini Command-Line Shell
+
+A minimal interactive command-line shell implemented entirely in **ARM32 Assembly** for the **CO1020 – Computer Systems Programming** course at the **Department of Computer Engineering, University of Peradeniya**.
+
+## 📌 Overview
+
+This project implements a functional command-line shell using **ARM32 Assembly Language**. The shell continuously accepts user input, identifies commands, executes the corresponding functionality, and returns to the prompt until the user exits.
+
+The project demonstrates fundamental low-level programming concepts including **system calls, memory management, string processing, command parsing, stack operations, register preservation, and error handling**.
+
+## ✨ Features
+
+- Interactive `shell>` command prompt
 - Manual command parsing using string comparison
-- Direct Linux ARM32 system calls for input/output and program termination
+- Direct Linux ARM32 system calls
 - 256-byte input buffer
-- Newline removal and null termination
+- Input sanitization and newline removal
 - Stack-based register preservation
-- Unknown-command and missing-argument handling
-- Custom numerical processing
+- Error handling for invalid commands and arguments
+- Decimal-to-hexadecimal conversion
+- Average calculation for multiple numbers
 - Tested using QEMU in an ARM32 Linux environment
-Supported Commands
-Command	Description
-hello	Prints Hello World!
-help	Displays the available commands and usage information
-clear	Clears the terminal using ANSI escape sequences
-exit	Exits the shell gracefully
-hex <number>	Converts a decimal integer to hexadecimal
-avg <n1> <n2> ...	Calculates the integer arithmetic average of multiple numbers
 
+## 💻 Supported Commands
 
-Custom Commands
-hex <number>
-Converts a decimal number to hexadecimal representation.
+| Command | Description |
+|---------|-------------|
+| `hello` | Prints `Hello World!` |
+| `help` | Displays all available commands and usage information |
+| `clear` | Clears the terminal screen |
+| `exit` | Terminates the shell |
+| `hex <number>` | Converts a decimal number to hexadecimal |
+| `avg <n1> <n2> ...` | Calculates the arithmetic average of multiple numbers |
+
+The four basic commands and the two custom commands `hex` and `avg` are the commands implemented in our project. :chatgpt-content-reference{index="0"}
+
+## 🔢 Custom Commands
+
+### `hex <number>`
+
+Converts a decimal integer into its hexadecimal representation.
+
 Example:
+
+```text
 shell> hex 16
 0x10
-The implementation includes command-line argument parsing, ASCII-to-integer conversion, nibble extraction using bit shifting, hexadecimal character conversion, and validation for missing or invalid arguments.
-avg <n1> <n2> ...
+```
+
+The implementation performs:
+
+- Command-line argument parsing
+- ASCII-to-integer conversion
+- Bit shifting and nibble extraction
+- Hexadecimal character conversion
+- Input validation and error handling
+
+### `avg <n1> <n2> ...`
+
 Calculates the arithmetic average of multiple space-separated numbers.
+
 Example:
+
+```text
 shell> avg 18 18 18 18
 Average: 18
-The command parses multiple numerical arguments, maintains a running sum and count, and performs safe integer division.
-Project Architecture
-The program is organized using the standard ARM32 assembly sections:
-- .data – command strings, prompts, messages, constants, and ANSI escape sequences
-- .bss – uninitialized runtime storage, including the 256-byte input buffer and temporary number-conversion buffer
-- .text – executable code, shell loop, command handlers, system-call routines, and helper functions
-Program Flow
+```
+
+The implementation parses multiple numbers, maintains a running sum and count, and performs integer division to calculate the result. :chatgpt-content-reference{index="1"}
+
+## 🏗️ Project Architecture
+
+The program follows the standard ARM32 Assembly memory structure.
+
+### `.data`
+
+Contains:
+
+- Command strings
+- Shell prompt
+- Help messages
+- Error messages
+- ANSI escape sequences
+
+### `.bss`
+
+Contains runtime storage including:
+
+- 256-byte user input buffer
+- 64-byte temporary number-conversion buffer
+
+### `.text`
+
+Contains:
+
+- Main executable code
+- Shell loop
+- Command handlers
+- System-call routines
+- Helper functions
+
+## 🔄 Program Flow
+
+```text
 _start
    |
    v
@@ -51,74 +111,132 @@ Display "shell>" prompt
 Read user input
    |
    v
-Remove newline / sanitize input
+Remove newline
    |
    v
-Parse command using string comparison
+Parse command
    |
-   +--> hello
-   +--> help
-   +--> clear
-   +--> hex
-   +--> avg
-   +--> exit
+   +----> hello
+   +----> help
+   +----> clear
+   +----> hex
+   +----> avg
+   +----> exit
    |
    v
-Execute matching handler
+Execute command
    |
    v
 Return to shell loop
-Low-Level Concepts Demonstrated
+```
+
+The shell continues this process until the `exit` command is executed. :chatgpt-content-reference{index="2"}
+
+## ⚙️ Technical Concepts
+
+This project demonstrates:
+
 - ARM32 Assembly programming
-- Linux system calls via SWI
+- Linux system calls
 - Register management
 - Stack operations
 - Conditional branching
-- String comparison and parsing
-- Manual buffer management
+- String comparison
+- Command parsing
+- Manual memory management
 - ASCII-to-integer conversion
 - Integer-to-hexadecimal conversion
-- Arithmetic operations
+- Input validation
+- Error handling
 - Modular function design
-- Input validation and error handling
-System Calls
-The shell interacts directly with Linux ARM32 system calls:
-System Call	Number	Purpose
-read	3	Read user input
-write	4	Print output
-exit	1	Terminate the shell
 
+## 🖥️ Linux System Calls
 
-The system call number is placed in r7, while r0-r2 contain the required arguments.
-Testing
-The shell was tested using QEMU with an ARM32 Linux environment. Testing covered:
-- Shell startup and continuous loop behavior
-- All four basic commands
-- hex conversion and argument handling
-- avg calculations with multiple inputs
+The shell directly interacts with Linux using ARM32 system calls.
+
+| System Call | Number | Purpose |
+|-------------|-------:|---------|
+| `read` | 3 | Read user input |
+| `write` | 4 | Display output |
+| `exit` | 1 | Terminate the program |
+
+The system call number is placed in register `r7`, while `r0-r2` contain the required arguments. :chatgpt-content-reference{index="3"}
+
+## 🧪 Testing
+
+The shell was tested using **QEMU with an ARM32 Linux environment**.
+
+Testing included:
+
+- Shell startup and loop behavior
+- Basic command execution
+- Custom command execution
+- Decimal-to-hexadecimal conversion
+- Average calculations
 - Empty input handling
 - Repeated command execution
 - Register and stack stability
 - Error handling
-Project Structure
+
+Testing confirmed that the shell remained responsive and stable during repeated command execution. :chatgpt-content-reference{index="4"} :chatgpt-content-reference{index="5"}
+
+## 📁 Project Structure
+
+```text
 ARM32-Mini-Command-Line-Shell/
+│
 ├── shell.s
 └── README.md
-Team
-Group 83
-- H.M.H.N. Abeyrathna — E/22/001
-- M.A.N.P. Anawarathne — E/22/027
-Both team members contributed collaboratively to the design, coding, testing, and debugging of the ARM32 shell.
-My Contribution
-I contributed to the core implementation of the shell, including the base architecture, system-call integration, input handling, command logic, and command handlers. I also participated in testing and debugging the program using QEMU. For the project documentation, I contributed to researching and analyzing the technical material, and I handled screen recording for the project presentation.
-Course Information
-- Course: CO1020 – Computer Systems Programming
-- Department: Department of Computer Engineering
-- University: University of Peradeniya
-- Project Type: Pair/Group Project
-- Language: ARM32 Assembly
-- Year: 2025
-Key Learning Outcomes
-This project strengthened our understanding of low-level programming, ARM architecture, direct operating-system interaction, memory and register management, command parsing, debugging, and building software without high-level abstractions.
-License
-This repository contains academic coursework and is shared for educational and portfolio purposes.
+```
+
+## 👥 Team
+
+**Group 83**
+
+- **H.M.H.N. Abeyrathna** — E/22/001
+- **M.A.N.P. Anawarathne** — E/22/027
+
+Both team members contributed collaboratively to the design, implementation, testing, and debugging of the ARM32 shell.
+
+## 👩‍💻 My Contribution
+
+I contributed to the **core design and implementation** of the ARM32 command-line shell, including:
+
+- Base shell architecture
+- Memory section setup
+- System-call integration
+- Input handling
+- Main shell control flow
+- Command logic and command handlers
+- Testing and debugging using QEMU
+- Research and technical analysis for project documentation
+- Screen recording for the project presentation
+
+The coding, testing, and debugging were carried out collaboratively by both team members. :chatgpt-content-reference{index="6"}
+
+## 🎓 Course Information
+
+- **Course:** CO1020 – Computer Systems Programming
+- **Department:** Department of Computer Engineering
+- **University:** University of Peradeniya
+- **Project:** ARM32 Mini Command-Line Shell
+- **Group:** 83
+- **Language:** ARM32 Assembly
+- **Year:** 2025
+
+## 📚 Key Learning Outcomes
+
+Through this project, we gained practical experience in:
+
+- Low-level programming
+- ARM architecture
+- Linux system calls
+- Memory and register management
+- Stack handling
+- Command parsing
+- Assembly-level debugging
+- Building software without high-level language abstractions
+
+## 📄 License
+
+This repository contains academic coursework and is shared for **educational and portfolio purposes**.
